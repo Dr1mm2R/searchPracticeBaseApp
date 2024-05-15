@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/icons/favicon.ico"/>
+    <meta charset="UTF-8">
+    <title>Список резюме практикантов</title>
+    <style>
+        .resume-card {
+            overflow: auto;
+            scrollbar-width: none;
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            width: 15%;
+            height: 500px;
+            background: linear-gradient(#212121, #212121) padding-box,
+            linear-gradient(145deg, transparent 0%, #ff0000 14.28%, #ff7f00 28.57%, #ffff00 42.85%, #00ff00 57.13%, #0000ff 71.42%, #4b0082 85.71%, #8a2be2 100%) border-box;
+            border: 2px solid transparent;
+            border-radius: 15px;
+            box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01),
+            0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09),
+            0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+            transition: 1s;
+            margin: 15px;
+            color: white;
+            animation: gradient 15s ease infinite;
+            background-size: 100% 300%;
+            min-width: 250px;
+        }
+
+        .resume-list {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            margin: 6% auto;
+        }
+
+        .resume-list::after {
+            content: '';
+            flex: auto;
+        }
+
+        .button-about {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 7px;
+            border: 1px solid rgb(188, 76, 0);
+            font-size: 20px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 2px;
+            background: black;
+            color: #fff;
+            overflow: hidden;
+            box-shadow: 0 0 0 0 transparent;
+            -webkit-transition: all 0.2s ease-in;
+            -moz-transition: all 0.2s ease-in;
+            transition: all 0.2s ease-in;
+        }
+
+        .button-about:hover {
+            background: rgb(229, 95, 55);
+            box-shadow: 0 0 30px 5px rgb(219, 53, 69);
+            -webkit-transition: all 0.2s ease-out;
+            -moz-transition: all 0.2s ease-out;
+            transition: all 0.2s ease-out;
+        }
+
+        .button-about:hover::before {
+            -webkit-animation: sh03 0.5s 0s linear;
+            -moz-animation: sh03 0.5s 0s linear;
+            animation: sh03 0.5s 0s linear;
+        }
+
+        .button-copy {
+            border-radius: 7px;
+            border: 1px solid rgb(188, 76, 0);
+            font-size: 20px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 2px;
+            background: black;
+            color: #fff;
+            overflow: hidden;
+            box-shadow: 0 0 0 0 transparent;
+            -webkit-transition: all 0.2s ease-in;
+            -moz-transition: all 0.2s ease-in;
+            transition: all 0.2s ease-in;
+        }
+
+        .button-copy:hover {
+            background: rgb(229, 95, 55);
+            box-shadow: 0 0 30px 5px rgba(219, 53, 69, 0.5);
+            -webkit-transition: all 0.2s ease-out;
+            -moz-transition: all 0.2s ease-out;
+            transition: all 0.2s ease-out;
+        }
+
+        .button-copy:hover::before {
+            -webkit-animation: sh03 0.5s 0s linear;
+            -moz-animation: sh03 0.5s 0s linear;
+            animation: sh03 0.5s 0s linear;
+        }
+
+        @keyframes sh03 {
+            from {
+                opacity: 0;
+                left: 0%;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+                left: 100%;
+            }
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 50% 0%;
+            }
+
+            50% {
+                background-position: 50% 100%;
+            }
+
+            100% {
+                background-position: 50% 0%;
+            }
+        }
+
+        .button-about:active {
+            box-shadow: 0 0 0 0 transparent;
+            -webkit-transition: box-shadow 0.2s ease-in;
+            -moz-transition: box-shadow 0.2s ease-in;
+            transition: box-shadow 0.2s ease-in;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 200px;
+            border-radius: 50%;
+            transition: width 0.5s, height 0.5s;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+        li {
+            margin: 5px 0;
+        }
+
+        .main-info{
+            padding: 20px;
+            transition: 1s;
+        }
+
+        .user-fio{
+            transition: 1s;
+        }
+
+        .additional-info{
+            width: 90%;
+            justify-self: right;
+            padding: 35px;
+            transition: 1s;
+            display: none;
+        }
+
+        .additional-info .input-field {
+            width: auto;
+            height: 50px;
+            text-indent: 15px;
+            border-radius: 15px;
+            outline: none;
+            background-color: transparent;
+            border-color: rgba(209, 121, 66, 0.5);
+            transition: all 0.3s;
+            caret-color: black ;
+            color: #dadada;
+        }
+
+        .additional-info .input-field:hover {
+            box-shadow: 0 0 30px 5px rgba(219, 53, 69, 0.4);
+        }
+
+        .additional-info .label {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            height: -moz-fit-content;
+            height: fit-content;
+            transition: all 0.3s;
+        }
+
+        .additional-info .label .title {
+            padding: 0 10px;
+            transition: all 300ms;
+            font-size: 16px;
+            color: #cfd1d9;
+            font-weight: 600;
+            width: -moz-fit-content;
+            width: fit-content;
+            top: 14px;
+            position: relative;
+            left: 15px;
+            background: transparent;
+        }
+
+        .delimiter{
+            display: none;
+            background-color: white;
+            height: 100%;
+        }
+
+        td {
+            padding: 8px;
+            line-height: normal;
+        }
+
+        .resume-solution{
+            border-radius: 15px;
+            border: 1px solid rgba(209, 121, 66, 0.5);
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <input type="hidden" id="size-list" th:value="${students_list.size()}">
+
+    <div th:insert="blocks/header"></div>
+    <div class="resume-list">
+        <div th:each="student : ${students_list}" class="resume-card">
+            <div class="main-info">
+                <input type="hidden" th:value="${student.getResume().photoStudent}" id="photoName">
+                <img class="profile-img" loading="lazy" data-src="https://img.freepik.com/premium-vector/loading-icon_609277-1096.jpg?size=626&ext=jpg"
+                     th:src="@{/students-resume/image(photoStudent=${student.getResume().photoStudent})}">
+                <h4 class="user-fio">
+                    <span th:if="${student.firstName}" th:text="${encryptionUtils.decryptData(student.firstName)}"></span>
+                    <span th:if="${student.middleName}" th:text="${encryptionUtils.decryptData(student.middleName)}"></span>
+                    <span th:if="${student.lastName}" th:text="${encryptionUtils.decryptData(student.lastName)}"></span>
+                </h4>
+                <ul>
+                    <li><strong>Образование:</strong> <span th:text="${student.resume.education}"></span></li>
+                    <li><strong>Цель практики:</strong>
+                        <span th:text="${student.resume.purposeInternship}"></span>
+                    </li>
+                </ul>
+                <button class="button-about" id="button-about" onclick="getMoreResumeInfo()">Подробнее</button>
+            </div>
+            <div class="delimiter">|</div>
+            <div class="additional-info" style="font-size: 24px">
+                <h1><u>Подробная информация</u></h1>
+                <table style="width:100%; height: auto; top: 0">
+                    <tr>
+                        <td colspan="2">
+                            <label class="label">
+                                <span class="title">Персональные качества</span>
+                                <input disabled th:value="${student.resume.personalQualities}" class="input-field"/>
+                            </label>
+                        </td>
+                        <td>
+                            <label class="label">
+                                <span class="title">Дни прохождения практики</span>
+                                <input disabled th:value="${student.resume.daysInternship}" class="input-field"/>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label class="label">
+                                <span class="title">Предпочитаемые языки</span>
+                                <input disabled th:value="${student.resume.preferredLanguages}" class="input-field"/>
+                            </label>
+                        </td>
+                        <td>
+                            <label class="label">
+                                <span class="title">Период прохождения практики</span>
+                                <input disabled th:value="${student.resume.periodInternship}" class="input-field"/>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label class="label">
+                                <span class="title">Профессиональные навыки</span>
+                                <input disabled th:value="${student.resume.professionalSkills}" class="input-field"/>
+                            </label>
+                        </td>
+                        <td colspan="2" rowspan="2">
+                            <div th:if="${practiceBaseNotFound} or ${practiceBase}" class="resume-solution">
+                                <h1>Вынести решение по резюме</h1>
+                                <form id="form-field" th:action="@{/students-resume/invite-interview}" th:method="post">
+                                    <input style="margin: 5px" type="hidden" th:value="${student.id}" name="studentId">
+                                    <input style="margin: 5px" type="hidden" th:value="${applyOrNot}" id="test">
+                                    <label class="label">
+                                        <span class="title">Поле для ввода комментария к резюме</span>
+                                        <textarea th:name="comment" style="margin: 5px; resize: vertical; min-height: 100px; max-height: 150px; overflow-wrap: break-word;" rows="3" class="input-field"></textarea>
+                                    </label>
+                                    <button style="margin: 5px" class="button-copy" type="submit">Отправить</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="label">
+                                <span class="title">Номер телефона</span>
+                                <input disabled th:value="${student.resume.contact.phoneNumber}" class="input-field"/>
+                                <button class="button-copy" onclick="copyField()">Скопировать</button>
+                            </label>
+                        </td>
+                        <td>
+                            <label class="label">
+                                <span class="title">Электронная почта</span>
+                                <input disabled th:value="${encryptionUtils.decryptData(student.resume.contact.email)}" class="input-field"/>
+                                <button class="button-copy" onclick="copyField()">Скопировать</button>
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+
+    function applyResume(){
+
+    }
+
+    function discardResume(){
+        console.log(document.getElementById('test').value);
+    }
+
+    function copyField(){
+        const label = event.currentTarget.closest('.label');
+        const inputField = label.querySelector('.input-field');
+        const buttonCopy = label.querySelector('.button-copy');
+        inputField.select();
+        inputField.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(inputField.value);
+        buttonCopy.textContent = 'Успешно';
+
+        setTimeout(function (){
+            buttonCopy.textContent = 'Скопировать';
+        }, 1500);
+    }
+
+    function getMoreResumeInfo() {
+        const card = event.currentTarget.closest('.resume-card');
+        const delimiter = card.querySelector('.delimiter');
+        const mainInfo = card.querySelector('.main-info');
+        const profileImg = card.querySelector('.profile-img');
+        const userFIO = card.querySelector('.user-fio');
+        const additionalInfo = card.querySelector('.additional-info');
+
+        const currentHeight = card.offsetHeight;
+        const newHeight = currentHeight * 1.5;
+        const buttonAbout = event.currentTarget;
+        const currentHeightImg = parseInt(profileImg.height);
+
+        mainInfo.style.width = '20%';
+        card.style.width = '100%';
+        card.style.height = newHeight + 'px';
+        profileImg.style.height = (currentHeightImg + 100) + 'px';
+        additionalInfo.style.display = 'block';
+        delimiter.style.display = 'block';
+        buttonAbout.textContent = 'Закрыть';
+        buttonAbout.onclick = function() {
+            closeResumeInfo(buttonAbout);
+        };
+
+        setTimeout(function() {
+        }, 500);
+        setTimeout(function() {
+            card.scrollIntoView({ behavior: "smooth", block: "center" });
+            userFIO.style.fontSize = '40px';
+            mainInfo.style.fontSize = '26px';
+        }, 900);
+    }
+
+    function closeResumeInfo(){
+        const card = event.currentTarget.closest('.resume-card');
+        const delimiter = card.querySelector('.delimiter');
+        const mainInfo = card.querySelector('.main-info');
+        const additionalInfo = card.querySelector('.additional-info');
+        const userFIO = card.querySelector('.user-fio');
+        const profileImg = card.querySelector('.profile-img');
+        const currentHeightImg = parseInt(profileImg.height);
+        const buttonAbout = event.currentTarget;
+
+        card.style.width = '15%';
+        card.style.height = '500px';
+        profileImg.style.height = (currentHeightImg - 100) + 'px';
+
+        buttonAbout.textContent = 'Подробнее';
+        buttonAbout.onclick = function() {
+            getMoreResumeInfo(buttonAbout);
+        };
+
+        setTimeout(function() {
+        }, 500);
+        setTimeout(function() {
+            card.scrollIntoView({ behavior: "smooth", block: "center" });
+            mainInfo.style.width = '100%';
+            userFIO.style.fontSize = '24px';
+            mainInfo.style.fontSize = '16px';
+            additionalInfo.style.display = 'none';
+            delimiter.style.display = 'none';
+        }, 900);
+    }
+</script>

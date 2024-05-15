@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link rel="icon" type="image/x-icon" href="/icons/favicon.ico" />
+  <style>
+    .flip-card {
+      background-color: transparent;
+      width: 15%;
+      height: 50%;
+      min-width: 20%;
+      min-height: 600px;
+      perspective: 1000px;
+      font-family: sans-serif;
+    }
+
+    .title {
+      font-size: 1.5em;
+      font-weight: 900;
+      text-align: center;
+      margin: 0;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+    }
+
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front, .flip-card-back {
+      box-shadow: 0 8px 14px 0 rgba(0,0,0,0.2);
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border: 1px solid coral;
+      border-radius: 1rem;
+    }
+
+    .flip-card-front {
+      background: linear-gradient(120deg, bisque 60%, rgb(255, 231, 222) 88%,
+      rgb(255, 211, 195) 40%, rgba(255, 127, 80, 0.603) 48%);
+      color: coral;
+    }
+
+    .flip-card-back {
+      background: linear-gradient(120deg, rgb(255, 174, 145) 30%, coral 88%,
+      bisque 40%, rgb(255, 185, 160) 78%);
+      color: white;
+      transform: rotateY(180deg);
+    }
+
+    .button-style {
+      border-radius: 15px;
+      display: flex;
+      justify-content: center;
+      background: transparent;
+    }
+
+    .button-style:hover {
+      border-radius: 15px;
+      display: flex;
+      justify-content: center;
+      background: transparent;
+    }
+
+    .box {
+      width: 35px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      transition: all .8s;
+      cursor: pointer;
+      position: relative;
+      background: #a87562;
+      overflow: hidden;
+    }
+
+    .box:before {
+      content: "Н";
+      position: absolute;
+      top: 0;
+      background: #7e5c4f;
+      border-radius: 5px;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(100%);
+      transition: transform .4s;
+    }
+
+    .box:nth-child(2)::before {
+      transform: translateY(-100%);
+      content: 'А';
+    }
+
+    .box:nth-child(3)::before {
+      transform: translateY(100%);
+      content: ' ';
+    }
+
+    .box:nth-child(4)::before {
+      transform: translateY(-100%);
+      content: 'С';
+    }
+
+    .box:nth-child(5)::before {
+      transform: translateY(100%);
+      content: 'Т';
+    }
+
+    .box:nth-child(6)::before {
+      transform: translateY(-100%);
+      content: 'Р';
+    }
+
+    .box:nth-child(7)::before {
+      transform: translateY(100%);
+      content: 'А';
+    }
+
+    .box:nth-child(8)::before {
+      transform: translateY(-100%);
+      content: 'Н';
+    }
+
+    .box:nth-child(9)::before {
+      transform: translateY(100%);
+      content: 'И';
+    }
+
+    .box:nth-child(10)::before {
+      transform: translateY(-100%);
+      content: 'Ц';
+    }
+
+    .box:nth-child(11)::before {
+      transform: translateY(100%);
+      content: 'У';
+    }
+
+    .button-style:hover .box:before {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+<div class="flip-card">
+  <div class="flip-card-inner">
+    <div class="flip-card-front">
+      <p class="title">Резюме студентов</p>
+      <p>Подробнее</p>
+    </div>
+    <div class="flip-card-back">
+      <p class="title">На данной странице сайта вам, как сотруднику от организации, будет доступен функционал</p>
+      <ul>
+        <li>Просмотр списка опубликованных резюме</li>
+        <li>Приглашение потенциальных практикантов на базу практики</li>
+      </ul>
+      <div class="button-style" onclick="redirectToStudentResume()">
+        <div class="box"> </div>
+        <div class="box"> </div>
+        <div class="box">П</div>
+        <div class="box">Е</div>
+        <div class="box">Р</div>
+        <div class="box">Е</div>
+        <div class="box">Й</div>
+        <div class="box">Т</div>
+        <div class="box">И</div>
+        <div class="box"> </div>
+        <div class="box"> </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="flip-card">
+  <div class="flip-card-inner">
+    <div class="flip-card-front">
+      <p class="title">Управление базой практики</p>
+      <p>Подробнее</p>
+    </div>
+    <div class="flip-card-back">
+      <p class="title">На данной странице сайта вам, как сотруднику от организации, будет доступен функционал</p>
+      <ul>
+        <li>Создание места прохождения практики</li>
+        <li>Открытие и закрытие набора на базу практики</li>
+        <li>Просмотр практикантов на базе практики</li>
+        <li>Просмотр выполненных практикантами работ</li>
+      </ul>
+      <div class="button-style" onclick="redirectToPracticeBase()">
+        <div class="box"> </div>
+        <div class="box"> </div>
+        <div class="box">П</div>
+        <div class="box">Е</div>
+        <div class="box">Р</div>
+        <div class="box">Е</div>
+        <div class="box">Й</div>
+        <div class="box">Т</div>
+        <div class="box">И</div>
+        <div class="box"> </div>
+        <div class="box"> </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="flip-card">
+  <div class="flip-card-inner">
+    <div class="flip-card-front">
+      <p class="title">Заявки на устройство</p>
+      <p>Подробнее</p>
+    </div>
+    <div class="flip-card-back">
+      <p class="title">На данной странице сайта вам, как сотруднику от организации, будет доступен функционал</p>
+      <ul>
+        <li>Просмотр поданных заявок на устройство в вашу базу практики</li>
+        <li>Рассмотрение заявок и личных качеств потенциального практиканта</li>
+        <li>Отклонение заявки</li>
+        <li>Назначение практиканту времени собеседования</li>
+        <li>Одобрение практиканта и устройство его на стажировку </li>
+      </ul>
+      <div class="button-style" onclick="redirectToStudentRequests()">
+        <div class="box"> </div>
+        <div class="box"> </div>
+        <div class="box">П</div>
+        <div class="box">Е</div>
+        <div class="box">Р</div>
+        <div class="box">Е</div>
+        <div class="box">Й</div>
+        <div class="box">Т</div>
+        <div class="box">И</div>
+        <div class="box"> </div>
+        <div class="box"> </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+
+<script>
+  function redirectToPracticeBase() {
+    window.location.href = "/practice-base-panel";
+  }
+  function redirectToStudentRequests() {
+    window.location.href = "/students-requests/view?findOrApply=apply";
+  }
+  function redirectToStudentResume() {
+    window.location.href = "/students-resume/view?findOrApply=find";
+  }
+</script>

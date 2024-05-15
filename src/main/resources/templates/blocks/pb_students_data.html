@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <title>Управление студентами</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <link rel="icon" type="image/x-icon" href="/icons/favicon.ico" />
+    <style>
+        .block_students{
+            width: 100%;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+        }
+
+        .overlay-info-about-visits {
+            position: fixed;
+            border-radius: 15px;
+            border: 2px solid rgb(188, 76, 0);
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%, -70%);
+            width: 80%;
+            height: 80%;
+            background-color: rgb(33, 33, 33);
+            z-index: 999;
+            display: none;
+        }
+
+
+        .overlay-info-about-visits.open {
+            display: block;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: white;
+            z-index: 1000;
+        }
+
+        .student_info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        #dataTable {
+            margin-top: 100px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #dataTable th,
+        #dataTable td {
+            text-align: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+<div class="block_students">
+    <table>
+        <tr>
+            <td>
+                <h3>
+                    <b><u>
+                        ФИО
+                    </u></b>
+                </h3>
+            </td>
+            <td>
+                <h3>
+                    <b><u>
+                        Цель прохождения практики
+                    </u></b>
+                </h3>
+            </td>
+            <td>
+                <h3>
+                    <b><u>
+                        Выполненные работы
+                    </u></b>
+                </h3>
+            </td>
+        </tr>
+        <tr th:each="student : ${uniqueStudents}">
+            <td th:text="${encryptionUtils.decryptData(student.firstName)}
+          + ' ' + ${encryptionUtils.decryptData(student.middleName)}
+          + ' ' + ${encryptionUtils.decryptData(student.lastName)}"></td>
+            <td th:text="${student.resume.purposeInternship}"></td>
+            <td>
+                <button th:data-student-id="${student.id}"
+                        th:data-student-firstName="${encryptionUtils.decryptData(student.firstName)}"
+                        th:data-student-middleName="${encryptionUtils.decryptData(student.middleName)}"
+                        th:data-student-lastName="${encryptionUtils.decryptData(student.lastName)}"
+                        th:data-student-purposeInternship="${student.resume.purposeInternship}"
+                        onclick="showWorksStudent(this)">Посмотреть</button>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="overlay-info-about-visits">
+    <button class="close-button" onclick="closeOverlay()">&#10006;</button>
+    <h3 class="student_info" id="fio"></h3>
+    <table id="dataTable">
+        <thead>
+        <tr>
+            <th><h3><b><u>Дата посещения практики</u></b></h3></th>
+            <th><h3><b><u>Выполненная работа</u></b></h3></th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+</body>
+</html>
+
+<script>
+    function showWorksStudent(button){
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+
+        const studentId = button.getAttribute('data-student-id');
+        const studentFirstName = button.getAttribute('data-student-firstName');
+        const studentMiddleName = button.getAttribute('data-student-middleName');
+        const studentLastName = button.getAttribute('data-student-lastName');
+        const studentPurposeInternship = button.getAttribute('data-student-purposeInternship');
+
+        const options = {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: studentId
+        };
+
+        fetch('/practice-base-panel/getVisitLogByStudent', options)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Network response was not ok.');
+                }
+            })
+            .then(data => {
+                const overlay = document.querySelector('.overlay-info-about-visits');
+                overlay.classList.add('open');
+                const fio = overlay.querySelector('.student_info');
+                fio.innerHTML = studentFirstName + ' ' + studentMiddleName + ' ' + studentLastName +
+                    '<br><h4>' + studentPurposeInternship + '</h4>';
+
+                const tbody = overlay.querySelector("#dataTable tbody");
+                data.forEach(item => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `<td>${new Date(item.dateVisit).toLocaleDateString()}</td><td>${item.typeOfWork}</td>`;
+                    tbody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('There was a problem with your fetch operation:', error);
+            });
+    }
+
+    function closeOverlay() {
+        document.querySelector('.overlay-info-about-visits').classList.remove('open');
+    }
+</script>

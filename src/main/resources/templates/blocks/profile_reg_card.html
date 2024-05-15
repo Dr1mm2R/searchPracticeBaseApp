@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Карточка регистрации</title>
+    <link rel="icon" type="image/x-icon" href="/icons/favicon.ico" />
+    <style>
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .form-card {
+            background: linear-gradient(#212121, #212121) padding-box,
+            linear-gradient(145deg, transparent 35%, #d07742, #bc2c00) border-box;
+            border: 2px solid transparent;
+            box-shadow: 0px 187px 75px rgba(0, 0, 0, 0.01),
+            0px 105px 63px rgba(0, 0, 0, 0.05), 0px 47px 47px rgba(0, 0, 0, 0.09),
+            0px 12px 26px rgba(0, 0, 0, 0.1), 0px 0px 0px rgba(0, 0, 0, 0.1);
+            width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 20px;
+            position: relative;
+            transform: translate(-50%);
+            left: 50%;
+            border-radius: 25px;
+            background-size: 200% 100%;
+            animation: gradient 5s ease infinite;
+        }
+
+        .form {
+            background: transparent;
+            width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 20px;
+            position: relative;
+            transform: translate(-50%);
+            left: 50%;
+            border-radius: 25px;
+            background-size: 200% 100%;
+            animation: gradient 5s ease infinite;
+        }
+
+        .form .label {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            height: -moz-fit-content;
+            height: fit-content;
+        }
+        .form .label:has(input:focus) .title {
+            top: 0;
+            left: 0;
+            color: #d17842;
+        }
+        .form .label .title {
+            padding: 0 10px;
+            transition: all 300ms;
+            font-size: 16px;
+            color: #8b8e98;
+            font-weight: 600;
+            width: -moz-fit-content;
+            width: fit-content;
+            top: 14px;
+            position: relative;
+            left: 15px;
+            background: transparent;
+        }
+        .form .input-field {
+            width: auto;
+            height: 50px;
+            text-indent: 15px;
+            border-radius: 15px;
+            outline: none;
+            background-color: transparent;
+            border: 1px solid #21262e;
+            transition: all 0.3s;
+            caret-color: #d17842;
+            color: #aeaeae;
+        }
+
+        .form .input-field:hover {
+            border-color: rgba(209, 121, 66, 0.5);
+        }
+
+        .form .input-field:focus {
+            border-color: #d17842;
+        }
+        .form .split {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            gap: 15px;
+        }
+        .form .split label {
+            width: 130px;
+        }
+        .form .checkout-btn {
+            margin-top: 20px;
+            padding: 20px 0;
+            border-radius: 25px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.15, 0.83, 0.66, 1);
+            cursor: pointer;
+            font-size: 25px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            border: none;
+            justify-content: center;
+            fill: #fff;
+            color: #fff;
+            border: 2px solid transparent;
+            background-image: linear-gradient(315deg, #d07742 0%, #bc2c00 74%);
+            transition: all 200ms;
+        }
+
+        .form .checkout-btn:active {
+            scale: 0.95;
+        }
+
+        .form .logout-btn {
+            background-image: linear-gradient(315deg, #d04253 0%, #bc0022 74%);
+            scale: 1.25;
+            transition: all 200ms;
+        }
+
+        .form .logout-btn:active {
+            scale: 1.10;
+        }
+
+        .form .checkout-btn:hover {
+            color: #d17842;
+            border: 2px solid #d17842;
+            background: transparent;
+        }
+
+        .btn1_container {
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            box-shadow: -1px 3px 22px 0px rgba(0, 0, 0, 0.75);
+            background-image: linear-gradient(315deg, #d07742 0%, #bc2c00 74%);
+            border-radius: 20px;
+        }
+
+        .flipBtn {
+            width: 50px;
+            height: 22px;
+            background-color: #fff;
+            border-radius: 50px;
+            position: relative;
+            border: 2px solid #111;
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn-circle {
+            width: 19px;
+            height: 19px;
+            border-radius: 50px;
+            background-color: #c55222;
+            position: absolute;
+            left: 0;
+            transition: all 300ms ease;
+            z-index: 10;
+            overflow: hidden;
+            border: 2px solid #fff;
+        }
+
+        .move {
+            left: 26px;
+            background-color: #c85f2d;
+        }
+
+        .button-align{
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            left: 50%;
+            margin-top: 10px;
+            width: auto;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+<section class="form-card">
+    <form class="form" th:action="@{/profile/registration}" method="post">
+        <h1 style="color: white; text-align: center">Данные профиля</h1>
+        <input type="hidden" name="email" th:value="${email}"/>
+
+        <label for="position" class="label">
+            <span class="title">Должность</span>
+            <input
+                    id="position"
+                    class="input-field"
+                    type="text"
+                    name="position"
+                    title="Поле ввода"
+                    placeholder="Введите вашу должность"
+            />
+        </label>
+        <label for="direction" class="label">
+            <span class="title">Направление работы</span>
+            <input
+                    id="direction"
+                    class="input-field"
+                    type="text"
+                    name="direction"
+                    title="Поле ввода"
+                    placeholder="Введите направление работы"
+            />
+        </label>
+        <label for="experience" class="label">
+            <span class="title">Опыт работы (в годах)</span>
+            <input
+                    id="experience"
+                    class="input-field"
+                    type="number"
+                    name="experience"
+                    title="Поле ввода"
+                    placeholder="Введите опыт работы"
+            />
+        </label>
+        <div class="split">
+            <label for="lastName" class="label">
+                <span class="title">Фамилия</span>
+                <input
+                        id="lastName"
+                        class="input-field"
+                        type="text"
+                        name="lastName"
+                        title="Поле ввода"
+                        placeholder="Введите"
+                />
+            </label>
+            <label for="firstName" class="label">
+                <span class="title"> Имя</span>
+                <input
+                        id="firstName"
+                        class="input-field"
+                        type="text"
+                        name="firstName"
+                        title="Поле ввода"
+                        placeholder="Введите"
+                />
+            </label>
+            <label for="middleName" class="label">
+                <span class="title"> Отчество</span>
+                <input
+                        id="middleName"
+                        class="input-field"
+                        type="text"
+                        name="middleName"
+                        title="Поле ввода"
+                        placeholder="Введите"
+                />
+            </label>
+        </div>
+
+        <input type="hidden" class="form-control" id="role" name="role">
+
+        <div class="container">
+            <div class="btn1_container">
+                <div style="margin-right: 0; padding: 15px">
+                    <label style="font-size: 20px; color: white" id="role-selector">
+                        Я работодатель
+                    </label>
+                </div>
+                <div class="flipBtn" id="toggleSwitch">
+                    <div class="btn-circle"></div>
+                </div>
+            </div>
+        </div>
+
+        <input class="checkout-btn" type="submit" value="Сохранить данные" />
+    </form>
+
+    <form class="form" th:action="@{/profile/logout}" method="post">
+        <button type="submit" class="btn button-align btn-danger logout-btn">Отмена</button>
+    </form>
+</section>
+</body>
+</html>
+
+<script>
+    const flipBtn = document.querySelector(".flipBtn");
+
+    flipBtn.addEventListener("click", () => {
+        const role = document.getElementById("role-selector");
+        const roleValue = document.getElementById("role");
+
+        if (role.textContent === "Я работодатель") {
+            role.textContent = "Я преподаватель";
+            roleValue.value = "collegePM";
+        } else {
+            role.textContent = "Я работодатель";
+            roleValue.value = "pM";
+        }
+
+        const btn = document.querySelector(".btn-circle");
+
+        btn.classList.toggle("move");
+    });
+
+    flipBtn.click();
+</script>

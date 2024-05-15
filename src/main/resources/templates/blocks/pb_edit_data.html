@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Управление базой практики</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <link rel="icon" type="image/x-icon" href="/icons/favicon.ico" />
+    <style>
+        .checkBox{
+            border-radius: 15px;
+            border: 2px solid rgb(188, 76, 0);
+            padding: 20px;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+
+        .checkBox-title{
+            font-size: 26px;
+        }
+        .image-pick{
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-items: center;
+            margin: 5px;
+        }
+
+        .pb-info-form{
+            width: 100%;
+            margin-top: 5%;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 50%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-size: 24px;
+            background-color: transparent;
+            color: white;
+        }
+
+        textarea {
+            resize: vertical;
+            max-height: 300px;
+        }
+
+        .button-save-pb-info{
+            padding: 10px 20px;
+            border-radius: 7px;
+            border: 1px solid rgb(188, 76, 0);
+            font-size: 20px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 2px;
+            background: black;
+            color: #fff;
+            overflow: hidden;
+            box-shadow: 0 0 0 0 transparent;
+            -webkit-transition: all 0.2s ease-in;
+            -moz-transition: all 0.2s ease-in;
+            transition: all 1s;
+        }
+
+        .button-save-pb-info:hover {
+            background: rgb(229, 95, 55);
+            box-shadow: 0 0 30px 5px rgb(219, 53, 69);
+            -webkit-transition: all 0.2s ease-out;
+            -moz-transition: all 0.2s ease-out;
+            transition: all 0.2s ease-out;
+        }
+
+        .button-save-pb-info:hover::before {
+            -webkit-animation: sh02 0.5s 0s linear;
+            -moz-animation: sh02 0.5s 0s linear;
+            animation: sh02 0.5s 0s linear;
+        }
+
+        .button-save-pb-info::before {
+            content: '';
+            opacity: 0;
+            background: #fff;
+            box-shadow: 0 0 50px 30px #fff;
+            -ms-transform: skewX(-20deg);
+            transform: skewX(-20deg);
+        }
+
+        .button-save-pb-info:active {
+            box-shadow: 0 0 0 0 transparent;
+            -webkit-transition: box-shadow 0.2s ease-in;
+            -moz-transition: box-shadow 0.2s ease-in;
+            transition: box-shadow 0.2s ease-in;
+        }
+    </style>
+</head>
+<body>
+<div class="image-pick">
+    <input id="fileInput" type="file" style="display: none;" accept="image/*" onchange="previewAndResizeImage(event)">
+    <button onclick="document.getElementById('fileInput').click()">Выбрать изображение</button>
+    <img id="currentPhoto" th:src="@{/practice-base-panel/image(photoPracticeBase=${practiceBase.photoPlace})}" alt="" onerror="this.src='https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ='" width="auto" height="50%">
+</div>
+
+
+<form id="myForm" class="pb-info-form" th:action="@{/practice-base-panel/save}" method="post" enctype="multipart/form-data">
+    <input type="hidden" id="statusDialing" name="statusDialing"><br>
+
+    <label for="nameBase">Название организации:</label><br>
+    <input type="text" id="nameBase" name="nameBase" th:value="${practiceBase.nameBase}"><br>
+
+    <label for="descriptionAboutBase">Описание организации/род деятельности:</label><br>
+    <textarea id="descriptionAboutBase" name="descriptionAboutBase" th:text="${practiceBase.descriptionAboutBase}"></textarea><br>
+
+    <button class="button-save-pb-info" type="submit">Сохранить данные</button>
+    <div id="message"></div>
+
+    <div class="checkBox">
+        <p class="checkBox-title">Набор закрыт</p>
+        <div class="checkBox-icon" th:insert="elements/active_unactive_checkbox" onclick="changeStatus()"></div>
+    </div>
+</form>
+</body>
+</html>
+
+<script>
+    document.getElementById("myForm").addEventListener("submit", function(event) {
+        const infoMessage = document.getElementById('message');
+        infoMessage.textContent = ' ';
+        event.preventDefault();
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const imageFileInput = document.getElementById('fileInput');
+
+        const nameBase = document.getElementById('nameBase');
+        const description = document.getElementById('descriptionAboutBase');
+        const statusDialing = document.getElementById('statusDialing');
+
+        const imageFile = imageFileInput.files[0];
+        const formData = new FormData();
+        formData.append('photoPlace', imageFile);
+        formData.append('nameBase', nameBase.value);
+        formData.append('descriptionAboutBase', description.value);
+        formData.append('statusDialing', statusDialing.value);
+        fetch('http://localhost:8080/practice-base-panel/save', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        })
+            .then(response => {
+                const infoMessage = document.getElementById('message');
+                infoMessage.textContent = response.ok ? 'Успешно':'Ошибка сохранения';
+
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+
+    function changeStatus(){
+        const statusDialing = document.getElementById('statusDialing');
+        const checkBoxDiv = document.querySelector('.checkBox');
+        const checkBoxTitle = checkBoxDiv.querySelector('.checkBox-title');
+        const checkBoxIcon = checkBoxDiv.querySelector('.checkBox-icon');
+        const checkBoxIconContainer = checkBoxIcon.querySelector('.container');
+        const checkBoxIconValue = checkBoxIconContainer.querySelector('.checked-value');
+        const isChecked = checkBoxIconValue.checked;
+        if(isChecked){
+            statusDialing.value = 'UnActive';
+            checkBoxTitle.textContent='Набор закрыт';
+            console.log(checkBoxTitle.textContent);
+            console.log(statusDialing.value);
+        }else{
+            statusDialing.value = 'Active';
+            checkBoxTitle.textContent='Набор открыт';
+            console.log(checkBoxTitle.textContent);
+            console.log(statusDialing.value);
+        }
+    }
+    changeStatus();
+
+    function resizeImage(file, maxWidth, maxHeight, callback) {
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+            const image = new Image();
+
+            image.onload = function() {
+                let width = image.width;
+                let height = image.height;
+
+                const targetRatio = 16 / 9;
+                const imageRatio = width / height;
+
+                if (imageRatio > targetRatio) {
+                    height = width / targetRatio;
+                } else {
+                    width = height * targetRatio;
+                }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(image, 0, 0, width, height);
+
+                const resizedImageUrl = canvas.toDataURL('image/jpeg');
+                callback(resizedImageUrl);
+            };
+
+            image.src = event.target.result;
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    function previewAndResizeImage(event) {
+        const file = event.target.files[0];
+
+        if (file) {
+            resizeImage(file, 16, 9, function(resizedImageUrl) {
+                const imgElement = document.getElementById('currentPhoto');
+                imgElement.src = resizedImageUrl;
+            });
+        }
+    }
+</script>

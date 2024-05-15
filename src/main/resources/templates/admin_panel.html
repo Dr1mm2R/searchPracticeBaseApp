@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель администратора</title>
+    <link rel="icon" type="image/x-icon" href="/icons/favicon.ico" />
+    <style>
+        body{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            justify-items: center;
+            gap: 20px;
+        }
+
+        div{
+            max-height: 25em;
+            padding: 15px;
+            border: 2px solid #d17842;
+            border-radius: 20px;
+            overflow-y: auto;
+            left: 50%;
+        }
+
+        div h2{
+            text-align: center;
+        }
+
+        table{
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        td{
+            text-align: center;
+            padding: 5px;
+            border: 2px solid yellow;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+  <div>
+      <h2>
+          Данные работы апи и выдача запросов
+      </h2>
+      <table>
+          <tr>
+              <td>
+                  <h3>
+                    Общее количество запросов
+                  </h3>
+              </td>
+              <td>
+                  <h3>
+                    Количество ошибочных запросов
+                  </h3>
+              </td>
+              <td>
+                  <h3>
+                    Количество успешных запросов
+                  </h3>
+              </td>
+          </tr>
+          <tr>
+              <td th:text="${api_work_logs.getAllCountRequests()}"></td>
+              <td th:text="${api_work_logs.getErrorCountRequests()}"></td>
+              <td th:text="${api_work_logs.getSuccessfulCountRequests()}"></td>
+          </tr>
+      </table>
+  </div>
+  <div>
+      <h2>
+          Логирование
+      </h2>
+      <table>
+          <tr>
+              <td>
+                  <h3>
+                      Название файла логирования на сервере
+                  </h3>
+              </td>
+              <td>
+                  <h3>
+                      Скачивание
+                  </h3>
+              </td>
+          </tr>
+          <tr th:each="log : ${log_list}">
+              <td th:text="${log}"></td>
+              <td>
+                  <form th:action="@{/admin/download-file}" th:method="POST">
+                      <input type="hidden" name="nameFile" th:value="${log}">
+                      <input type="hidden" name="isLogFile" th:value="true">
+                      <button type="submit">Скачать файл</button>
+                  </form>
+              </td>
+          </tr>
+      </table>
+  </div>
+
+  <div>
+      <h2>
+          Логирование
+      </h2>
+      <table>
+          <tr>
+              <td>
+                  <h3>
+                      Название файла логирования на сервере
+                  </h3>
+              </td>
+              <td>
+                  <h3>
+                      Скачивание
+                  </h3>
+              </td>
+          </tr>
+          <tr th:each="backup : ${backup_list}">
+              <td th:text="${backup}"></td>
+              <td>
+                  <form th:action="@{/admin/download-file}" th:method="POST">
+                      <input type="hidden" name="nameFile" th:value="${backup}">
+                      <input type="hidden" name="isLogFile" th:value="false">
+                      <button type="submit">Скачать файл</button>
+                  </form>
+              </td>
+          </tr>
+      </table>
+  </div>
+</body>
+</html>
